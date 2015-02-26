@@ -10,6 +10,8 @@ def findSector (x,y):
 			print 'Found sector ' + child.get('x'), child.get('y')
 			return child
 
+# switch sector 1 and sector 2
+# elements are located first, then changed later
 def switchSector (x1, y1, x2, y2):
 
 	firstSector = None
@@ -26,7 +28,9 @@ def switchSector (x1, y1, x2, y2):
 		secondSector.set('x', str(x1))
 		secondSector.set('y', str(y1))
 		print 'Second sector is now at ' + secondSector.get('x'), secondSector.get('y')
-	
+
+# just to make final synthax more readable, moveSector should be used for
+# switching existing sector with a blank entry (empty sector or non existent)	
 def moveSector (x1,y1,x2,y2):
 	switchSector (x1,y1,x2,y2)
 	
@@ -35,6 +39,7 @@ def write():
 
 #may have to check for subtype (determines if NSWE)
 #alternative is to change both gid and subtype during rotation
+# disconnects gate. option is to disconnect both ends.
 def disconnectGate (x,y,gid,twoway):
 	sector = findSector (x,y)
 	for obj in sector.iter ('o'):
@@ -50,12 +55,14 @@ def disconnectGate (x,y,gid,twoway):
 			if twoway:
 				disconnectGate (gx,gy,gtid,0)					
 
+# disconnects all gates in sector XY from the rest of the universe.
 def disconnectSector (x,y):
 	sector = findSector (x,y)
 	for obj in sector.iter ('o'):
 		if obj.get('t') == '18':
 			disconnectGate (x,y,obj.get('gid'),1)
-			
+
+
 def reconnectGate(x,y,gid,gx,gy,gtid,twoway):
 	sector = findSector (x,y)
 	for obj in sector.iter ('o'):
