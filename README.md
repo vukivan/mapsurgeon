@@ -1,13 +1,13 @@
 X3 Map Surgeon
 ==============
 
-This is a Python utility for performing "plastic surgery" on the galaxy map in [Egosoft's X3](http://www.egosoft.com/) videogame series. It was designed specifically to simplify updating a custom map for new versions of the X3 overhaul [Litcube's Universe](https://code.google.com/p/litcubesuniverse/wiki/Index), which is based on **X3: Albion Prelude**. However, this utility will also work for vanilla versions of X3: AP, X3: Terran Conflict, and possibly X3: Reunion.
+This is a Python utility for performing "plastic surgery" on the galaxy map in [Egosoft's X3](http://www.egosoft.com/) videogame series. It was designed specifically to simplify updating a custom map for new versions of the X3 overhaul [Litcube's Universe](https://code.google.com/p/litcubesuniverse/wiki/Index), which is based on **X3: Albion Prelude**. However, this utility will also work for vanilla versions of **X3:AP**, **X3: Terran Conflict**, and possibly **X3: Reunion**.
 
 *Map Surgeon* consists of two commandline utilities, plus a set of input files, referred to as Schemas, which instruct *Map Surgeon* on what changes to make to the galaxy map.
 
 *remap.py* is the program that performs the map surgery.
 
-usage: python remap.py [-h] -m INPUTMAP -s INPUTSCHEMA -n INPUTNEWSECTORS [-g INPUTGATES] -o OUTPUT 
+    usage: python remap.py [-h] -m INPUTMAP -s INPUTSCHEMA -n INPUTNEWSECTORS [-g INPUTGATES] -o OUTPUT 
 
 *remap.py* accepts commandline arguments for 3 Required, plus a 4th optional but Recommended, input files, and the output filename for the new galaxy map.
 
