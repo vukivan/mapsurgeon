@@ -14,7 +14,7 @@ This is a Python utility for performing "plastic surgery" on the galaxy map in [
 * INPUTMAP - the original galaxy map to be altered (X3 vanilla name: x3universe.xml)
 * INPUTSCHEMA - the Remap Schema CSV file that specifies what sectors are to be removed (if any), new sectors to be added, and the new coordinates for all map sectors (currently: remap_schema.csv)
 * INPUTNEWSECTORS - an XML file that holds all new sectors and their contents to be added to the galaxy (currently: newsectors.xml)
-* (RECOMMENDED) INPUTGATES - the XML Gate Schema that specifies all gate position and orientation coordinates for all sectors in the new map.
+* (RECOMMENDED) INPUTGATES - the XML Gate Schema that specifies all gate position and orientation coordinates for all sectors in the new map. If this file is not supplied, Map Surgeon will place all new gates in the galaxy with default coordinates in their sectors (for their cardinal location.) This means they may be placed poorly in relation to the other objects in the sector will need to be checked and adjusted by hand in-game using the Galaxy Editor.
 * OUTPUT - the filename for the new galaxy map to be generated
 
 *gen_schema.py* is a helper utility used to auto-generate the INPUTSCHEMA and INPUTGATES schema files from an exemplar galaxy map. Because fine-tuning a new galaxy map (placing sector objects, positioning gates, etc.) typically requires working in the X3 Galaxy Editor, creating the initial version of a new map for the game has to be completed before this utility is fully useful. With a final draft of the galaxy map on hand, you can input it into *gen_schema.py* to generate the New Sectors Schema and the Gates Schema files.
