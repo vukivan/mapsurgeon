@@ -34,7 +34,7 @@ if args.gatesout:
     schema_export = ET.Element('universe')
 
     # Iterate through sectors
-    for sector in root.findall('o'):
+    for sector in map_root.findall('o'):
         sector_out = ET.SubElement(schema_export, 'o', sector.attrib)
 
         for gate in sector.findall(".//o[@t='18']"):
