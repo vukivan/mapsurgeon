@@ -4,8 +4,8 @@ import argparse
 import pandas as pd
 import os
 
-parser = argparse.ArgumentParser(description="This utility generates the Gate Network Schema file used by the X3 Remapper Utility.")
-parser.add_argument("-i", "--inputjobs", help="Reference Jobs File: input file name", required=True)
+parser = argparse.ArgumentParser(description="This utility generates the updated Jobs file needed for the new map.")
+parser.add_argument("-i", "--inputjobs", help="Source Jobs File: input file name", required=True)
 parser.add_argument("-s", "--inputschema", help="Remap schema: input file name", required=True)
 parser.add_argument("-o", "--outputjobs", help="Updated Jobs File: output file name", required=True)
 args = parser.parse_args()
