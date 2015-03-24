@@ -6,6 +6,13 @@ from xml.dom import minidom
 import pandas as pd
 import os
 
+INPUT_PATH = "input/"
+OUTPUT_ROOT = "output_package/addons/"
+TEXT_PATH = "t/"
+FILE_PRETEXT = "readtext_names_prepend.csv"
+OUTPUT_FILENAME = "9337-L044.xml"
+
+
 def prettify(elem):
     """Return a pretty-printed XML string for the Element.
     """
@@ -15,22 +22,22 @@ def prettify(elem):
 
 
 parser = argparse.ArgumentParser(description="This utility generates the updated ReadText file needed for the new map.")
-parser.add_argument("-n", "--inputnames", help="Source Names File: input file name", required=True)
-parser.add_argument("-d", "--inputdescriptions", help="Source Descriptions File: input file name", required=True)
-parser.add_argument("-s", "--inputschema", help="Remap schema: input file name", required=True)
-parser.add_argument("-o", "--output", help="Updated ReadText File: output file name", required=True)
+parser.add_argument("--version", action='version', version='%(prog)s 1.0')
+parser.add_argument("--inputnames", default="readtext_names.csv", help="Source Names File: input file name.")
+parser.add_argument("--inputdescr", default="readtext_descriptions.csv", help="Source Descriptions File: input file name.")
+parser.add_argument("--inputschema", default="remap_schema.csv", help="Input file name for remap schema.")
 args = parser.parse_args()
 
 print "ReadText Update Utility: Loading updated readtext values"
 
 # Load values for sector names and descriptions from CSV
-readtext_pre = pd.read_csv('schemas/readtext_names_prepend.csv', header=1)
-readtext_names = pd.read_csv(args.inputnames, header=1)
-readtext_descr = pd.read_csv(args.inputdescriptions, header=1)
+readtext_pre = pd.read_csv(INPUT_PATH + FILE_PRETEXT, header=1)
+readtext_names = pd.read_csv(INPUT_PATH + args.inputnames, header=1)
+readtext_descr = pd.read_csv(INPUT_PATH + args.inputdescr, header=1)
 
 print "Loading the Remap Schema"
 # Load map schema table from CSV into a pandas DataFrame
-map_schema = pd.read_csv(args.inputschema, index_col='key')
+map_schema = pd.read_csv(INPUT_PATH + args.inputschema, index_col='key')
 map_schema.sort_index(inplace=True)
 
 names_root = ET.Element('language')
@@ -67,9 +74,9 @@ for index, row in readtext_descr.iterrows():
         element.text = row[1]
 
 
-with open(args.output, 'w') as f:
+with open(OUTPUT_ROOT + TEXT_PATH + OUTPUT_FILENAME, 'w') as f:
     f.write(prettify(names_root))
 f.close()
 
-print "Updated readtext file saved to: " + args.output
+print "Updated readtext file saved to: " + OUTPUT_ROOT + TEXT_PATH + OUTPUT_FILENAME
 

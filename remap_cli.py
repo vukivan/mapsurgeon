@@ -5,6 +5,11 @@ import xml.etree.cElementTree as ET
 import pandas
 from xml.dom import minidom
 
+INPUT_PATH = "input/"
+OUTPUT_ROOT = "output_package/addons/"
+MAP_PATH = "maps/"
+
+
 def prettify(elem):
     """Return a pretty-printed XML string for the Element.
     """
@@ -60,44 +65,45 @@ def export_sorted_map(tree):
 
     # write map_export to disk
     print "Saving the new map to disk..."
-    with open(args.output, 'w') as f:
+    with open(OUTPUT_ROOT + MAP_PATH + "x3_universe.xml", 'w') as f:
         f.write(prettify(map_export))
     f.close()
 
-    print "\nMap Surgeon: Done! Your new map has been saved to disk.\n"
+    print "\nMap Surgeon: Done! Your new map has been saved to the Output Package folder: 'output_package\\addons\maps'.\n"
     if gates_default:
         print "New gates added to sectors were placed in default locations."
-        print "You need to load your new map in-game, and visually verify each gate\nis in an appropriate location.\n"
+        print "You need to load your new map in-game, and visually verify each gate is in an appropriate location.\n"
     print "After verifying your map in-game, if you make any adjustments using the Galaxy Editor,\nexport your updated map, and use the provided gen_schema.py utility to generate a Gate\nSchema. This will ensure future map runs will use your adjusted gates."
 
 
 # Begin of main program routine
 
 parser = argparse.ArgumentParser(description="This utility generates a new X3 universe map using the sector and gate network schema input files.")
-parser.add_argument("-m", "--inputmap", help="Input file name for original map.", required=True)
-parser.add_argument("-s", "--inputschema", help="Input file name for remap schema.", required=True)
-parser.add_argument("-n", "--inputnewsectors", help="Input file name for new sectors schema.", required=True)
-parser.add_argument("-o", "--output", help="Output file name for new map.", required=True)
-parser.add_argument("-g", "--inputgates", help="Input file name for new gate schema. (If no gate schema is provided, default gate positions and connectivity rules will be applied.)", required=False)
+parser.add_argument("--version", action='version', version='%(prog)s 1.0')
+parser.add_argument("--inputmap", default="x3_universe.xml", help="Input file name for original map.")
+parser.add_argument("--inputschema", default="remap_schema.csv", help="Input file name for remap schema.")
+parser.add_argument("--inputnewsectors", default="newsectors.xml", help="Input file name for new sectors schema.")
+parser.add_argument("--inputgates", default="gate_schema.xml", help="Input file name for new gate schema.")
+parser.add_argument("-g", "--usegateschema", help="Use a Gate Schema for gate placement? (0 or 1)", required=True)
 args = parser.parse_args()
 
-print "Map Surgeon: Loading source map..."
+print "Map Surgeon: Loading source map: " + INPUT_PATH + args.inputmap
 
 # Load original universe map via Element Tree 
-map_tree = ET.parse(args.inputmap)
+map_tree = ET.parse(INPUT_PATH + args.inputmap)
 map_root = map_tree.getroot()
 
-print "Loading Remap Schema..."
+print "Loading Remap Schema: " + INPUT_PATH + args.inputschema
 
 # Load map schema table from CSV into a pandas DataFrame (powerful associative table)
-map_schema = pandas.read_csv(args.inputschema, index_col='key')
+map_schema = pandas.read_csv(INPUT_PATH + args.inputschema, index_col='key')
 map_schema.sort_index(inplace=True)
 
 # Load gate network schema file, if provided
-if args.inputgates:
-    print "Gate Schema has been provided. It will direct the locations of all new gates..."
+if args.usegateschema == 1:
+    print "Gate Schema has been provided. It will direct the locations of all new gates: " + INPUT_PATH + args.inputgates
     gates_default = False   # flag to indicate whether default gate attributes, instead of the gate schema
-    gate_schema_tree = ET.parse(args.inputgates)
+    gate_schema_tree = ET.parse(INPUT_PATH + args.inputgates)
     gate_schema_root = gate_schema_tree.getroot()
 
 else:
@@ -176,8 +182,8 @@ for sector in map_root.findall('o'):
                     ET.SubElement(sector, 'o', lookup_gate.attrib)
 
 # Finally, load new sectors data and append to map
-print "Adding new sectors..."
-newsectors_tree = ET.parse(args.inputnewsectors)
+print "Adding new sectors: " + INPUT_PATH + args.inputnewsectors
+newsectors_tree = ET.parse(INPUT_PATH + args.inputnewsectors)
 newsectors_root = newsectors_tree.getroot()
 
 # Loop through sectors flagged in map schema for addition and find each sector

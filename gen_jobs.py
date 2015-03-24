@@ -4,20 +4,26 @@ import argparse
 import pandas as pd
 import os
 
+INPUT_PATH = "input/"
+OUTPUT_ROOT = "output_package/addons/"
+JOBS_PATH = "types/"
+OUTPUT_FILENAME = "Jobs.txt"
+
+
 parser = argparse.ArgumentParser(description="This utility generates the updated Jobs file needed for the new map.")
-parser.add_argument("-i", "--inputjobs", help="Source Jobs File: input file name", required=True)
-parser.add_argument("-s", "--inputschema", help="Remap schema: input file name", required=True)
-parser.add_argument("-o", "--outputjobs", help="Updated Jobs File: output file name", required=True)
+parser.add_argument("--version", action='version', version='%(prog)s 1.0')
+parser.add_argument("--inputjobs", default="Jobs.txt", help="Source Jobs File: input file name")
+parser.add_argument("--inputschema", default="remap_schema.csv", help="Input file name for remap schema.")
 args = parser.parse_args()
 
 print "Jobs Update Utility: Loading original Jobs file"
 
 # Load Jobs from CSV into a pandas DataFrame (powerful associative table)
-jobs = pd.read_csv(args.inputjobs, header=None, delimiter=';', skiprows=1)
+jobs = pd.read_csv(INPUT_PATH + args.inputjobs, header=None, delimiter=';', skiprows=1)
 
 print "Loading the Remap Schema"
 # Load map schema table from CSV into a pandas DataFrame
-map_schema = pd.read_csv(args.inputschema, index_col='key')
+map_schema = pd.read_csv(INPUT_PATH + args.inputschema, index_col='key')
 map_schema.sort_index(inplace=True)
 
 # Reassign job sectors to remapped coordinates (using Remap Schema for reference)
@@ -49,16 +55,16 @@ for index, row in remap_jobs.iterrows():
     #print 'update: (' + str(x) +',' + str(y) +')\n'
 
 # save updated jobs file to a temp file
-jobs.to_csv('types/jobs_temp.txt', ';', index=False, header=False)
+jobs.to_csv(OUTPUT_ROOT + JOBS_PATH + OUTPUT_FILENAME + '_TMP', ';', index=False, header=False)
 
 # and prep the final file, including the special header required by X3
-with open('types/jobs_temp.txt', 'r') as temp_jobs: 
+with open(OUTPUT_ROOT + JOBS_PATH + OUTPUT_FILENAME + '_TMP', 'r') as temp_jobs: 
     data = temp_jobs.read()
-with open(args.outputjobs, 'w') as f:
+with open(OUTPUT_ROOT + JOBS_PATH + OUTPUT_FILENAME, 'w') as f:
     f.write("16; // Jobs Updated and Exported by the X3 Map Surgeon utility --*-- 64\n" + data)
 f.close()
 temp_jobs.close()
-os.remove('types/jobs_temp.txt')
+os.remove(OUTPUT_ROOT + JOBS_PATH + OUTPUT_FILENAME + '_TMP')
 
 print "\nUpdated Jobs saved to disk. \n\nYou may still need to make other adjustments to the Jobs, \nsuch as altering Max Count for specific jobs that need different spawn rates. \nLitcube's Jobs Editor is highly recommended for this task \n(See included documentation for details.)"
 

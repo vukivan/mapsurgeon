@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+<?xml-stylesheet href="director.xsl" type="text/xsl" ?>
+<director name="LU_remap" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="director.xsd">
+  
+<documentation>
+    <author name="Ivan Vuk" alias="vukica" contact="egosoft forums" />
+    <content name="LU remap" description="take a guess" />
+    <version number="0.1" date="9/06/14" status="alpha" />
+</documentation>
+
+<cues>
+	<cue name="LU_remap_text">
+			<action>
+				<do_all>
+					<load_text fileid="9337"/>
+					<destroy_cue cue="this"/>
+				</do_all>
+			</action>
+	</cue>
+</cues>
+</director>
